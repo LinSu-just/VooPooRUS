@@ -87,12 +87,17 @@ const archiveMonths={
   5:{src:'assets/archive/june-v3.jpg?v=4',alt:'Итоги VooPooFamily за июнь'}
 };
 let archiveSwapTimer;
+function centerMobileArchive(){
+  if(!matchMedia('(max-width:760px)').matches)return;
+  const archiveBox=document.getElementById('archiveMonth');
+  requestAnimationFrame(()=>{archiveBox.scrollLeft=Math.max(0,(archiveBox.scrollWidth-archiveBox.clientWidth)/2)});
+}
 function setArchiveImage(archive){
   const image=document.getElementById('archiveImage');
   const target=new URL(archive.src,location.href).href;
-  if(image.src===target){image.alt=archive.alt;image.classList.remove('is-switching');return}
+  if(image.src===target){image.alt=archive.alt;image.classList.remove('is-switching');centerMobileArchive();return}
   const preload=new Image();
-  preload.onload=()=>{image.classList.add('is-switching');clearTimeout(archiveSwapTimer);archiveSwapTimer=setTimeout(()=>{image.src=archive.src;image.alt=archive.alt;requestAnimationFrame(()=>requestAnimationFrame(()=>image.classList.remove('is-switching')))},220)};
+  preload.onload=()=>{image.classList.add('is-switching');clearTimeout(archiveSwapTimer);archiveSwapTimer=setTimeout(()=>{image.src=archive.src;image.alt=archive.alt;requestAnimationFrame(()=>requestAnimationFrame(()=>image.classList.remove('is-switching');centerMobileArchive()}))},220)};
   preload.src=archive.src;
 }
 
@@ -109,7 +114,7 @@ function openMonth(monthIndex,{historyUpdate=true}={}){
   document.body.classList.toggle('archive-open',Boolean(archive));
   if(archive)setArchiveImage(archive);
   document.body.classList.toggle('month-empty',unavailable);
-  const reveal=()=>{homeView.hidden=true;homeView.classList.remove('is-leaving');monthView.hidden=false;document.body.classList.add('month-open');window.scrollTo({top:0,behavior:'smooth'})};
+  const reveal=()=>{homeView.hidden=true;homeView.classList.remove('is-leaving');monthView.hidden=false;document.body.classList.add('month-open');window.scrollTo({top:0,behavior:'smooth'});if(archive)setTimeout(centerMobileArchive,50)};
   if(monthView.hidden){homeView.classList.add('is-leaving');setTimeout(reveal,280)}else reveal();
   if(historyUpdate)history.pushState({month:monthIndex},'',`#month-${monthIndex+1}`);
 }
