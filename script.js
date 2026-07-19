@@ -127,11 +127,13 @@ document.querySelectorAll('.months button').forEach(btn=>btn.addEventListener('c
 
 const monthRail=document.querySelector('.months');
 let railDragging=false,railStartX=0,railStartScroll=0,railMoved=false;
-monthRail?.addEventListener('pointerdown',event=>{railDragging=true;railMoved=false;railStartX=event.clientX;railStartScroll=monthRail.scrollLeft;monthRail.classList.add('is-dragging')});
-monthRail?.addEventListener('pointermove',event=>{if(!railDragging)return;const distance=event.clientX-railStartX;if(Math.abs(distance)>5)railMoved=true;monthRail.scrollLeft=railStartScroll-distance});
-monthRail?.addEventListener('pointerup',()=>{railDragging=false;monthRail.classList.remove('is-dragging')});
-monthRail?.addEventListener('pointercancel',()=>{railDragging=false;monthRail.classList.remove('is-dragging')});
-window.addEventListener('pointerup',()=>{railDragging=false;monthRail?.classList.remove('is-dragging')});
+if(matchMedia('(pointer:fine)').matches){
+  monthRail?.addEventListener('pointerdown',event=>{railDragging=true;railMoved=false;railStartX=event.clientX;railStartScroll=monthRail.scrollLeft;monthRail.classList.add('is-dragging')});
+  monthRail?.addEventListener('pointermove',event=>{if(!railDragging)return;const distance=event.clientX-railStartX;if(Math.abs(distance)>5)railMoved=true;monthRail.scrollLeft=railStartScroll-distance});
+  monthRail?.addEventListener('pointerup',()=>{railDragging=false;monthRail.classList.remove('is-dragging')});
+  monthRail?.addEventListener('pointercancel',()=>{railDragging=false;monthRail.classList.remove('is-dragging')});
+  window.addEventListener('pointerup',()=>{railDragging=false;monthRail?.classList.remove('is-dragging')});
+}
 monthRail?.addEventListener('wheel',event=>{if(Math.abs(event.deltaY)>Math.abs(event.deltaX)){event.preventDefault();monthRail.scrollLeft+=event.deltaY}},{passive:false});
 monthRail?.addEventListener('click',event=>{if(railMoved){event.preventDefault();event.stopPropagation();railMoved=false}},true);
 document.querySelector('.hero-cta')?.addEventListener('click',()=>openMonth(+(document.querySelector('.months .active')?.dataset.month||6)));
