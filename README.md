@@ -38,3 +38,4 @@ python -m http.server 8000
 
 Проект не содержит токенов Telegram, ключей Brawl Stars API или данных сервисного аккаунта Google.
 
+Шрифты хранятся локально в `assets/fonts`. При обновлении сайта эту папку необходимо загружать на GitHub вместе с `index.html`, `style.css` и `script.js`.
