@@ -24,6 +24,11 @@ const fmt = value => {
   const numeric=Number(normalized);
   return Number.isFinite(numeric)?new Intl.NumberFormat('ru-RU').format(numeric):String(value);
 };
+const formatSheetDateTime=value=>{
+  const text=String(value||'').trim();
+  if(!text)return '—';
+  return /^\d{2}\.\d{2}\.\d{4}$/.test(text)?`${text} 00:00:00`:text;
+};
 const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value||'—'};
 const ranked=(pairs)=>pairs.filter(x=>x[0]).map((x,i)=>`<div class="rank-row"><span>${i+1}</span><b>${x[0]}</b><strong>${fmt(x[1])}</strong></div>`).join('');
 
@@ -32,7 +37,8 @@ function render(rows){
   liveRows=rows;
   const first=rows[0]||{};
   set('plusKubki',fmt(first.plus_kubki)); set('allKubki',fmt(first.obchie_kubki));
-  set('updateDate',first.obnova); set('liveUpdateDate',first.obnova); set('startDate','01.07.2026 00:00:00');
+ const updateStamp=formatSheetDateTime(first.obnova);
+  set('updateDate',updateStamp); set('liveUpdateDate',updateStamp); set('startDate','01.07.2026 00:00:00');
   document.getElementById('topClubs').innerHTML=ranked(rows.slice(0,3).map(r=>[r.top_club,r.top_club77]));
   set('antiClub',first.antitop_club); set('antiClubValue',fmt(first.antitop_club77));
   const realClubRows=rows.filter(r=>{
@@ -42,7 +48,7 @@ function render(rows){
   });
   document.getElementById('topPlayers').innerHTML=ranked(realClubRows.slice(0,10).map(r=>[r.top_club_playrs,r.top_club_playrs77]));
   document.getElementById('effectiveClubs').innerHTML=ranked(rows.filter(r=>r.club_efect).slice(0,10).map(r=>[r.club_efect,`${fmt(r.club_efect_cubki)} / ${fmt(r.club_efect77)} ⚡`]));
-  const clubPushers=Array.from({length:10},(_,i)=>({club:i+1,name:first[`top_push${i+1}`],value:first[`top_push_k${i+1}`]}));
+  const clubPushers=Array.from({length:11},(_,i)=>({club:i+1,name:first[`top_push${i+1}`],value:first[`top_push_k${i+1}`]}));
   document.getElementById('pushers').innerHTML=clubPushers.filter(x=>x.name).map(x=>`<article class="player"><small>Топ пушер клуба #${x.club}</small><b>${x.name}</b><span>+${fmt(x.value)} 🏆</span></article>`).join('');
   document.getElementById('top3x3').innerHTML=ranked(rows.slice(0,3).map(r=>[r.top_3x3,r.top_3x3_77]));
   set('topSolo',first.top_solo);set('topSoloValue',fmt(first.top_solo_77));set('topShd',first.top_shd);set('topShdValue',fmt(first.top_shd_77));
