@@ -1,6 +1,7 @@
 const SHEET_ID = '1MudKA6z5i5FjVs3tUEpEoR8tv4zz_M9yv4LMLkIQ6RA';
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 const JSONP_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:handleSheetData`;
+const UPDATE_TIME_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&range=BF3:BF3`;
 const monthNames = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
 
 function parseCSV(text){
@@ -24,20 +25,29 @@ const fmt = value => {
   const numeric=Number(normalized);
   return Number.isFinite(numeric)?new Intl.NumberFormat('ru-RU').format(numeric):String(value);
 };
-const formatSheetDateTime=value=>{
-  const text=String(value||'').trim();
-  if(!text)return '—';
-  return /^\d{2}\.\d{2}\.\d{4}$/.test(text)?`${text} 00:00:00`:text;
+const formatSheetDateTime=(dateValue,timeValue)=>{
+  const date=String(dateValue||'').trim();
+  const time=String(timeValue||'').trim();
+  if(!date)return '—';
+  if(/^\d{2}\.\d{2}\.\d{4}$/.test(date)&&/^\d{1,2}:\d{2}(?::\d{2})?$/.test(time))return `${date} ${time}`;
+  return date;
 };
 const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value||'—'};
 const ranked=(pairs)=>pairs.filter(x=>x[0]).map((x,i)=>`<div class="rank-row"><span>${i+1}</span><b>${x[0]}</b><strong>${fmt(x[1])}</strong></div>`).join('');
+async function fetchUpdateTime(){
+  try{
+    const response=await fetch(`${UPDATE_TIME_URL}&_=${Date.now()}`,{cache:'no-store'});
+    if(!response.ok)return '';
+    return (await response.text()).trim().replace(/^"|"$/g,'').replace(/""/g,'"');
+  }catch{return ''}
+}
 
 let liveRows=[];
 function render(rows){
   liveRows=rows;
   const first=rows[0]||{};
   set('plusKubki',fmt(first.plus_kubki)); set('allKubki',fmt(first.obchie_kubki));
- const updateStamp=formatSheetDateTime(first.obnova);
+ const updateStamp=formatSheetDateTime(first.obnova,rows[1]?.obnova);
   set('updateDate',updateStamp); set('liveUpdateDate',updateStamp); set('startDate','01.07.2026 00:00:00');
   document.getElementById('topClubs').innerHTML=ranked(rows.slice(0,3).map(r=>[r.top_club,r.top_club77]));
   set('antiClub',first.antitop_club); set('antiClubValue',fmt(first.antitop_club77));
@@ -73,7 +83,7 @@ async function loadData(){
   dataLoadStarted=true;
   const status=document.getElementById('status');
   status.hidden=false;status.textContent='Получаем свежие данные…';status.className='status';
-  try{const response=await fetch(`${CSV_URL}&_=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error(response.status);const rows=parseCSV(await response.text());render(rows);status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500)}
+  try{const response=await fetch(`${CSV_URL}&_=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error(response.status);const rows=parseCSV(await response.text());const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;render(rows);status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500)}
   catch(error){
     const tag=document.createElement('script');
     tag.src=JSONP_URL; tag.onerror=()=>{status.textContent='Не удалось прочитать таблицу. Проверьте доступ по ссылке.';status.className='status error'};
@@ -81,10 +91,10 @@ async function loadData(){
   }
 }
 
-window.handleSheetData=function(response){
+window.handleSheetData=async function(response){
   const headers=response.table.cols.map(c=>c.label);
   const rows=response.table.rows.map(row=>Object.fromEntries(headers.map((h,i)=>[h,row.c[i]?.f??row.c[i]?.v??''])));
-  render(rows);
+ const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;render(rows);
   const status=document.getElementById('status');status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500);
 };
 
