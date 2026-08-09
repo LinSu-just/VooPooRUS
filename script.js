@@ -195,7 +195,7 @@ if(matchMedia('(pointer:fine)').matches){
 }
 monthRail?.addEventListener('wheel',event=>{if(Math.abs(event.deltaY)>Math.abs(event.deltaX)){event.preventDefault();monthRail.scrollLeft+=event.deltaY}},{passive:false});
 monthRail?.addEventListener('click',event=>{if(railMoved){event.preventDefault();event.stopPropagation();railMoved=false}},true);
-document.querySelector('.hero-cta')?.addEventListener('click',()=>openMonth(+(document.querySelector('.months .active')?.dataset.month||6)));
+document.querySelector('.hero-cta')?.addEventListener('click',()=>openMonth(new Date().getMonth()));
 document.querySelector('.brand')?.addEventListener('click',event=>{event.preventDefault();showHome()});
 document.getElementById('backHome')?.addEventListener('click',()=>showHome());
 window.addEventListener('popstate',()=>{const match=location.hash.match(/^#month-(\d{1,2})$/);match?openMonth(Math.min(11,Math.max(0,+match[1]-1)),{historyUpdate:false}):showHome({historyUpdate:false})});
