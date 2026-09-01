@@ -97,7 +97,7 @@ async function loadData(){
 window.handleSheetData=async function(response){
   const headers=response.table.cols.map(c=>c.label);
   const rows=response.table.rows.map(row=>Object.fromEntries(headers.map((h,i)=>[h,row.c[i]?.f??row.c[i]?.v??''])));
-   const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===new Date().getMonth())render(rows);
+  const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===new Date().getMonth())render(rows);
   const status=document.getElementById('status');status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500);
 };
 
