@@ -44,6 +44,7 @@ async function fetchUpdateTime(){
 }
 
 let liveRows=[];
+let activeMonthIndex=null;
 function render(rows){
   liveRows=rows;
   const first=rows[0]||{};
@@ -85,7 +86,7 @@ async function loadData(){
   dataLoadStarted=true;
   const status=document.getElementById('status');
   status.hidden=false;status.textContent='Получаем свежие данные…';status.className='status';
-  try{const response=await fetch(`${CSV_URL}&_=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error(response.status);const rows=parseCSV(await response.text());const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;render(rows);status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500)}
+  try{const response=await fetch(`${CSV_URL}&_=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error(response.status);const rows=parseCSV(await response.text());const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===new Date().getMonth())render(rows);status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500)}
   catch(error){
     const tag=document.createElement('script');
     tag.src=JSONP_URL; tag.onerror=()=>{status.textContent='Не удалось прочитать таблицу. Проверьте доступ по ссылке.';status.className='status error'};
@@ -96,7 +97,7 @@ async function loadData(){
 window.handleSheetData=async function(response){
   const headers=response.table.cols.map(c=>c.label);
   const rows=response.table.rows.map(row=>Object.fromEntries(headers.map((h,i)=>[h,row.c[i]?.f??row.c[i]?.v??''])));
-  const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;render(rows);
+   const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===new Date().getMonth())render(rows);
   const status=document.getElementById('status');status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500);
 };
 
@@ -163,6 +164,7 @@ function renderHistorical(data){
   else{set('tournamentTitle',`Итоги турнира за ${data.name} не указаны`);set('tournamentText','В таблице нет данных о победителях турнира.');set('tournamentState','НЕТ ДАННЫХ')}
 }
 function openMonth(monthIndex,{historyUpdate=true}={}){
+  activeMonthIndex=monthIndex;
   const month=monthNames[monthIndex];
   document.querySelector('.months .active')?.classList.remove('active');
   const selected=document.querySelector(`.months button[data-month="${monthIndex}"]`);
@@ -188,6 +190,7 @@ function openMonth(monthIndex,{historyUpdate=true}={}){
 }
 
 function showHome({historyUpdate=true}={}){
+  activeMonthIndex=null;
   monthView.hidden=true;homeView.hidden=false;homeView.classList.remove('is-leaving');document.body.classList.remove('month-open');
   document.body.classList.remove('month-empty');
   document.body.classList.remove('archive-open');
