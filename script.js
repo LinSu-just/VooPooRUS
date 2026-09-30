@@ -141,7 +141,110 @@ const historicalMonths={
     wins:[['VPF|Samurai',2038],['VPF|SLASH👾',1646],['VPF|Peetrix',1579]],antiWins:['VPF|Westic👅',1],
     brawlers:[['VPF|Kurumi⛩️','BOLT',3010],['VPF | Fellzyk','8-BIT',3005],['VPF|Sanik9517','WENDY',2888]],antiBrawler:['VPF|LinSu','SPIKE',1011],
     top10:[['VPF|Samurai',25729],['VPF| شكوليا',16032],['VPF|Peetrix',11642],['VPF | MikaS 夜',11295],['VPF | FASTER',10518],['VPF | Sava',10121],['VPF|ごめんね少年🕊️🥀',9785],['VPF|SLASH👾',8241],['VPF|Pivo',8140],['VPF |😵IVA4N🥵',7354]],
-    clubPushers:[['#1','VPF|Samurai',25729],['#2','VPF| شكوليا',16032],['#3','VPF|NiceColt⛩️',6875],['#4','VPF|alinxxex',3035],['#5','VPF | MikaS 夜',11295],['#6','VPF|Golaya Эмз',4864],['#7','VPF|SLASH👾',8241],['#8','VPF | FASTER',10518],['#9','VPF | ZêRøX',6851],['#10','『ʀᴇ𝚚ᴜɴᴅ』',6575]],tournament:['Monte Cristo','TEAM Falcons','$win$']}
+    clubPushers:[['#1','VPF|Samurai',25729],['#2','VPF| شكوليا',16032],['#3','VPF|NiceColt⛩️',6875],['#4','VPF|alinxxex',3035],['#5','VPF | MikaS 夜',11295],['#6','VPF|Golaya Эмз',4864],['#7','VPF|SLASH👾',8241],['#8','VPF | FASTER',10518],['#9','VPF | ZêRøX',6851],['#10','『ʀᴇ𝚚ᴜɴᴅ』',6575]],tournament:['Monte Cristo','TEAM Falcons','$win
+
+function renderHistorical(data){
+  set('startDate',data.start);set('updateDate',data.updated);set('liveUpdateDate',data.updated);
+  set('plusKubki',fmt(data.plus));set('allKubki',fmt(data.total));
+  set('dataBadge',`◆ АРХИВ · ${data.name.toUpperCase()}`);set('dataTitle',`Итоги VPF за ${data.name}`);set('dataSubtitle','Зафиксированные данные из ежемесячного архива VooPooFamily');
+  set('clubsChapterTitle',`Кто отличился в ${data.where}`);set('nominationsTitle',`НОМИНАЦИИ · ${data.name.toUpperCase()}`);
+  document.getElementById('topClubs').innerHTML=ranked(data.topClubs||[]);set('antiClub',data.antiClub?.[0]);set('antiClubValue',fmt(data.antiClub?.[1]));
+  document.getElementById('topPlayers').innerHTML=ranked(data.members||[]);document.getElementById('effectiveClubs').innerHTML=ranked(data.effective||[]);
+  document.getElementById('pushers').innerHTML=(data.pushers||[]).map((x,i)=>`<article class="player"><small>${i+1} место по пушу</small><b>${x[0]}</b><span>+${fmt(x[1])} 🏆</span></article>`).join('');
+  const clubPushers=document.getElementById('clubPushers');clubPushers.innerHTML=(data.clubPushers||[]).map(x=>`<article><small>Клуб ${x[0]}</small><b>${x[1]}</b><strong>+${fmt(x[2])} 🏆</strong></article>`).join('');
+  document.getElementById('clubPushersTitle').hidden=!(data.clubPushers||[]).length;clubPushers.hidden=!(data.clubPushers||[]).length;
+  document.getElementById('top3x3').innerHTML=ranked(data.x3||[]);set('anti3x3',data.anti3?.[0]);set('anti3x3Value',fmt(data.anti3?.[1]));
+  set('topSolo',data.solo?.[0]?.[0]);set('topSoloValue',fmt(data.solo?.[0]?.[1]));set('topShd',data.shd?.[0]?.[0]);set('topShdValue',fmt(data.shd?.[0]?.[1]));
+  set('topWins',data.wins?.[0]?.[0]);set('topWinsValue',fmt(data.wins?.[0]?.[1]));set('antiWins',data.antiWins?.[0]);set('antiWinsValue',fmt(data.antiWins?.[1]));
+  document.getElementById('topBrawlers').innerHTML=(data.brawlers||[]).map((x,i)=>`<article class="brawler-leader place-${i+1}"><span>${i+1}</span><small>${x[1]}</small><b>${x[0]}</b><strong>${fmt(x[2])} 🏆</strong></article>`).join('');
+  set('antiBrawlerPlayer',data.antiBrawler?.[0]);set('antiBrawler',data.antiBrawler?.[1]);set('antiBrawlerValue',fmt(data.antiBrawler?.[2]));set('antiPusher',data.antiPusher?.[0]);set('antiPusherValue',fmt(data.antiPusher?.[1]));
+  document.getElementById('top10').innerHTML=ranked(data.top10||[]);
+  set('nomPush',data.pushers?.[0]?.[0]);set('nomPushValue',`+${fmt(data.pushers?.[0]?.[1])} 🏆`);set('nom3x3',data.x3?.[0]?.[0]);set('nom3x3Value',fmt(data.x3?.[0]?.[1]));set('nomWins',data.wins?.[0]?.[0]);set('nomWinsValue',fmt(data.wins?.[0]?.[1]));set('nomBrawler',data.brawlers?.[0]?.[0]);set('nomBrawlerValue',`${data.brawlers?.[0]?.[1]||'—'} · ${fmt(data.brawlers?.[0]?.[2])}`);set('nomSolo',data.solo?.[0]?.[0]);set('nomSoloValue',fmt(data.solo?.[0]?.[1]));set('nomShd',data.shd?.[0]?.[0]);set('nomShdValue',fmt(data.shd?.[0]?.[1]));
+  if((data.tournament||[]).length){set('tournamentTitle',`Победители турнира за ${data.name}`);document.getElementById('tournamentText').innerHTML=data.tournament.map((team,i)=>`<b>${i+1} место</b> · ${team}`).join('<br>');set('tournamentState','ЗАВЕРШЁН')}
+  else{set('tournamentTitle',`Итоги турнира за ${data.name} не указаны`);set('tournamentText','В таблице нет данных о победителях турнира.');set('tournamentState','НЕТ ДАННЫХ')}
+}
+function openMonth(monthIndex,{historyUpdate=true}={}){
+  activeMonthIndex=monthIndex;
+  const month=monthNames[monthIndex];
+  document.querySelector('.months .active')?.classList.remove('active');
+  const selected=document.querySelector(`.months button[data-month="${monthIndex}"]`);
+  selected?.classList.add('active'); selected?.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  set('monthName',month); set('viewMonthLabel',capitalize(month));
+  const unavailable=isUnavailableMonth(monthIndex);
+  monthView.classList.toggle('month-unavailable',unavailable);
+  const historical=historicalMonths[monthIndex];
+  monthView.classList.remove('month-archive');
+  document.body.classList.remove('archive-open');
+  if(historical)renderHistorical(historical);
+  if(monthIndex===CURRENT_MONTH_INDEX&&!historical&&!unavailable){
+    set('dataBadge',`LIVE · ${month.toUpperCase()}`);set('dataTitle','Свежая статистика VPF');set('dataSubtitle','Данные автоматически загружаются из бота и Google Таблицы');
+    set('clubsChapterTitle',`Кто отличился в ${monthWhere[monthIndex]}`);set('nominationsTitle',`НОМИНАЦИИ · ${month.toUpperCase()}`);
+    set('tournamentTitle',`Турнир за ${month} ещё продолжается`);set('tournamentText','Победители появятся здесь сразу после публикации результатов.');set('tournamentState','СКОРО');
+    document.getElementById('clubPushersTitle').hidden=true;document.getElementById('clubPushers').hidden=true;
+    loadData();
+  }
+  document.body.classList.toggle('month-empty',unavailable);
+  const reveal=()=>{homeView.hidden=true;homeView.classList.remove('is-leaving');monthView.hidden=false;document.body.classList.add('month-open');window.scrollTo({top:0,behavior:'smooth'})};
+  if(monthView.hidden){homeView.classList.add('is-leaving');setTimeout(reveal,280)}else reveal();
+  if(historyUpdate)history.pushState({month:monthIndex},'',`#month-${monthIndex+1}`);
+}
+
+function showHome({historyUpdate=true}={}){
+  activeMonthIndex=null;
+  monthView.hidden=true;homeView.hidden=false;homeView.classList.remove('is-leaving');document.body.classList.remove('month-open');
+  document.body.classList.remove('month-empty');
+  document.body.classList.remove('archive-open');
+  document.querySelector('.months .active')?.classList.remove('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(historyUpdate)history.pushState({home:true},'','#home');
+}
+
+document.querySelectorAll('.months button').forEach(btn=>btn.addEventListener('click',()=>openMonth(+btn.dataset.month)));
+
+const monthRail=document.querySelector('.months');
+let railDragging=false,railStartX=0,railStartScroll=0,railMoved=false;
+if(matchMedia('(pointer:fine)').matches){
+  monthRail?.addEventListener('pointerdown',event=>{railDragging=true;railMoved=false;railStartX=event.clientX;railStartScroll=monthRail.scrollLeft;monthRail.classList.add('is-dragging')});
+  monthRail?.addEventListener('pointermove',event=>{if(!railDragging)return;const distance=event.clientX-railStartX;if(Math.abs(distance)>5)railMoved=true;monthRail.scrollLeft=railStartScroll-distance});
+  monthRail?.addEventListener('pointerup',()=>{railDragging=false;monthRail.classList.remove('is-dragging')});
+  monthRail?.addEventListener('pointercancel',()=>{railDragging=false;monthRail.classList.remove('is-dragging')});
+  window.addEventListener('pointerup',()=>{railDragging=false;monthRail?.classList.remove('is-dragging')});
+}
+monthRail?.addEventListener('wheel',event=>{if(Math.abs(event.deltaY)>Math.abs(event.deltaX)){event.preventDefault();monthRail.scrollLeft+=event.deltaY}},{passive:false});
+monthRail?.addEventListener('click',event=>{if(railMoved){event.preventDefault();event.stopPropagation();railMoved=false}},true);
+document.querySelector('.hero-cta')?.addEventListener('click',()=>openMonth(CURRENT_MONTH_INDEX));
+document.querySelector('.brand')?.addEventListener('click',event=>{event.preventDefault();showHome()});
+document.getElementById('backHome')?.addEventListener('click',()=>showHome());
+window.addEventListener('popstate',()=>{const match=location.hash.match(/^#month-(\d{1,2})$/);match?openMonth(Math.min(11,Math.max(0,+match[1]-1)),{historyUpdate:false}):showHome({historyUpdate:false})});
+
+const hero=document.querySelector('.intro');
+const heroKing=document.getElementById('heroKing');
+if(hero&&heroKing&&matchMedia('(pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  hero.addEventListener('pointermove',event=>{const box=hero.getBoundingClientRect();const x=(event.clientX-box.left)/box.width-.5;const y=(event.clientY-box.top)/box.height-.5;heroKing.style.setProperty('--px',`${x*13}px`);heroKing.style.setProperty('--py',`${y*9}px`);heroKing.style.transform=`translate(${x*13}px,${y*9}px)`});
+  hero.addEventListener('pointerleave',()=>heroKing.style.transform='');
+}
+const initialMonth=location.hash.match(/^#month-(\d{1,2})$/);
+if(initialMonth)openMonth(Math.min(11,Math.max(0,+initialMonth[1]-1)),{historyUpdate:false});
+function syncHeaderHeight(){document.documentElement.style.setProperty('--header-height',`${document.getElementById('siteHeader')?.offsetHeight||158}px`)}
+syncHeaderHeight();window.addEventListener('resize',syncHeaderHeight);window.addEventListener('load',syncHeaderHeight);
+if('ResizeObserver'in window)new ResizeObserver(syncHeaderHeight).observe(document.getElementById('siteHeader'));
+const backToTop=document.getElementById('backToTop');
+function syncBackToTop(){backToTop?.classList.toggle('visible',window.scrollY>500&&!document.body.classList.contains('month-empty'))}
+window.addEventListener('scroll',syncBackToTop,{passive:true});
+backToTop?.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+syncBackToTop();
+]},
+  8:{name:'сентябрь',where:'сентябре',start:'01.09.2026 · 00:00:00',updated:'01.10.2026 · 00:00:33',plus:212348,total:7971976,
+    topClubs:[['VooPooFamily #2',65677],['VooPooFamily #1',32065],['VooPooFamily #6',32019]],antiClub:['VooPooFamily #7',3339],
+    members:[['VooPooFamily #6',21],['VooPooFamily #2',19],['VooPooFamily #5',14],['VooPooFamily #9',14],['VooPooFamily #1',13],['VooPooFamily #8',8],['VooPooFamily#10',8],['VooPooFamily #3',7],['VooPooFamily #4',7],['VooPooFamily #7',6]],
+    effective:[['VooPooFamily #2','65 677 / 3 457 ⚡'],['VooPooFamily #1','32 065 / 2 467 ⚡'],['VooPooFamily #3','15 407 / 2 201 ⚡'],['VooPooFamily #9','24 127 / 1 723 ⚡'],['VooPooFamily #6','32 019 / 1 525 ⚡'],['VooPooFamily #5','18 112 / 1 294 ⚡'],['VooPooFamily#10','8 424 / 1 053 ⚡'],['VooPooFamily #4','6 814 / 973 ⚡'],['VooPooFamily #8','6 364 / 796 ⚡'],['VooPooFamily #7','3 339 / 556 ⚡']],
+    pushers:[['VPF | zlayakaya',10305],['VPF | FASTER',9566],['VPF |😵IVA4N🥵',8908]],antiPusher:['VPF|teraktovnet',13],
+    x3:[['VPF | zlayakaya',1079],['VPF|Peetrix',1033],['VPF|monolit?',693]],anti3:['VPF|teraktovnet',1],
+    solo:[['VPF| شكوليا',270],['VPF|NiceColt⛩️',264],['VPF | Sava',254]],shd:[['VPF | Sava',324],['VPF|NiceColt⛩️',295],['VPF| شكوليا',272]],
+    wins:[['VPF|Peetrix',1154],['VPF | zlayakaya',1127],['VPF | FASTER',836]],antiWins:['VPF|teraktovnet',2],
+    brawlers:[['VPF|Kurumi⛩️','BOLT',3000],['VPF|Maori','KIT',3000],['VPF|Sanik9517','WENDY',2884]],antiBrawler:['VPF|LinSu','SPIKE',1011],
+    top10:[['VPF | zlayakaya',10305],['VPF | FASTER',9566],['VPF |😵IVA4N🥵',8908],['VPF|Iwkysam',8865],['VPF | Sava',8512],['VPF|Peetrix',8007],['VPF| شكوليا',7686],['VPF | Apathetic',7483],['VPF|LINE💕',6744],['VPF|NiceColt⛩️',6478]],
+    clubPushers:[['#1','VPF|NiceColt⛩️',6478],['#2','VPF |😵IVA4N🥵',8908],['#3','VPF | FASTER',9566],['#4','VPF|LinSu',3607],['#5','VPF|Dark Souls夜',5604],['#6','VPF | zlayakaya',10305],['#7','VPF|GeRuS✨',1481],['#8','VPF|ごめんね少年🕊️🥀',1865],['#9','VPF|LINE💕',6744],['#10','VPF|58',3871]],tournament:[]}
 };
 
 function renderHistorical(data){
