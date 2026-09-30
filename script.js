@@ -4,6 +4,7 @@ const JSONP_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq
 const UPDATE_TIME_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&range=BF3:BF3`;
 const monthNames = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
 const monthWhere = ['январе','феврале','марте','апреле','мае','июне','июле','августе','сентябре','октябре','ноябре','декабре'];
+const CURRENT_MONTH_INDEX = 9;
 
 function parseCSV(text){
   const rows=[]; let row=[],cell='',quoted=false;
@@ -86,7 +87,7 @@ async function loadData(){
   dataLoadStarted=true;
   const status=document.getElementById('status');
   status.hidden=false;status.textContent='Получаем свежие данные…';status.className='status';
-  try{const response=await fetch(`${CSV_URL}&_=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error(response.status);const rows=parseCSV(await response.text());const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===new Date().getMonth())render(rows);status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500)}
+  try{const response=await fetch(`${CSV_URL}&_=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error(response.status);const rows=parseCSV(await response.text());const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===CURRENT_MONTH_INDEX)render(rows);status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500)}
   catch(error){
     const tag=document.createElement('script');
     tag.src=JSONP_URL; tag.onerror=()=>{status.textContent='Не удалось прочитать таблицу. Проверьте доступ по ссылке.';status.className='status error'};
@@ -97,14 +98,14 @@ async function loadData(){
 window.handleSheetData=async function(response){
   const headers=response.table.cols.map(c=>c.label);
   const rows=response.table.rows.map(row=>Object.fromEntries(headers.map((h,i)=>[h,row.c[i]?.f??row.c[i]?.v??''])));
-  const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===new Date().getMonth())render(rows);
+  const updateTime=await fetchUpdateTime();if(rows[1]&&updateTime)rows[1].obnova=updateTime;liveRows=rows;if(activeMonthIndex===CURRENT_MONTH_INDEX)render(rows);
   const status=document.getElementById('status');status.textContent='Данные обновлены из бота @VooPooRUS_bot';status.className='status ok';setTimeout(()=>status.remove(),3500);
 };
 
 const homeView=document.getElementById('home');
 const monthView=document.getElementById('monthView');
 const capitalize=value=>value.charAt(0).toUpperCase()+value.slice(1);
-const isUnavailableMonth=monthIndex=>monthIndex===0||monthIndex===1||monthIndex>new Date().getMonth();
+const isUnavailableMonth=monthIndex=>monthIndex===0||monthIndex===1||monthIndex>CURRENT_MONTH_INDEX;
 const historicalMonths={
   2:{name:'март',where:'марте',start:'10.03.2026 · 01:29:53',updated:'01.04.2026 · 00:02:34',plus:431353,total:7353533,
     topClubs:[['VooPooFamily #2',89889],['VooPooFamily #5',85816],['VooPooFamily #8',62779]],antiClub:['VooPooFamily #7',19072],
@@ -176,7 +177,7 @@ function openMonth(monthIndex,{historyUpdate=true}={}){
   monthView.classList.remove('month-archive');
   document.body.classList.remove('archive-open');
   if(historical)renderHistorical(historical);
-  if(monthIndex===new Date().getMonth()&&!historical&&!unavailable){
+  if(monthIndex===CURRENT_MONTH_INDEX&&!historical&&!unavailable){
     set('dataBadge',`LIVE · ${month.toUpperCase()}`);set('dataTitle','Свежая статистика VPF');set('dataSubtitle','Данные автоматически загружаются из бота и Google Таблицы');
     set('clubsChapterTitle',`Кто отличился в ${monthWhere[monthIndex]}`);set('nominationsTitle',`НОМИНАЦИИ · ${month.toUpperCase()}`);
     set('tournamentTitle',`Турнир за ${month} ещё продолжается`);set('tournamentText','Победители появятся здесь сразу после публикации результатов.');set('tournamentState','СКОРО');
@@ -212,7 +213,7 @@ if(matchMedia('(pointer:fine)').matches){
 }
 monthRail?.addEventListener('wheel',event=>{if(Math.abs(event.deltaY)>Math.abs(event.deltaX)){event.preventDefault();monthRail.scrollLeft+=event.deltaY}},{passive:false});
 monthRail?.addEventListener('click',event=>{if(railMoved){event.preventDefault();event.stopPropagation();railMoved=false}},true);
-document.querySelector('.hero-cta')?.addEventListener('click',()=>openMonth(new Date().getMonth()));
+document.querySelector('.hero-cta')?.addEventListener('click',()=>openMonth(CURRENT_MONTH_INDEX));
 document.querySelector('.brand')?.addEventListener('click',event=>{event.preventDefault();showHome()});
 document.getElementById('backHome')?.addEventListener('click',()=>showHome());
 window.addEventListener('popstate',()=>{const match=location.hash.match(/^#month-(\d{1,2})$/);match?openMonth(Math.min(11,Math.max(0,+match[1]-1)),{historyUpdate:false}):showHome({historyUpdate:false})});
