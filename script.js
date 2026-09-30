@@ -141,7 +141,18 @@ const historicalMonths={
     wins:[['VPF|Samurai',2038],['VPF|SLASH👾',1646],['VPF|Peetrix',1579]],antiWins:['VPF|Westic👅',1],
     brawlers:[['VPF|Kurumi⛩️','BOLT',3010],['VPF | Fellzyk','8-BIT',3005],['VPF|Sanik9517','WENDY',2888]],antiBrawler:['VPF|LinSu','SPIKE',1011],
     top10:[['VPF|Samurai',25729],['VPF| شكوليا',16032],['VPF|Peetrix',11642],['VPF | MikaS 夜',11295],['VPF | FASTER',10518],['VPF | Sava',10121],['VPF|ごめんね少年🕊️🥀',9785],['VPF|SLASH👾',8241],['VPF|Pivo',8140],['VPF |😵IVA4N🥵',7354]],
-    clubPushers:[['#1','VPF|Samurai',25729],['#2','VPF| شكوليا',16032],['#3','VPF|NiceColt⛩️',6875],['#4','VPF|alinxxex',3035],['#5','VPF | MikaS 夜',11295],['#6','VPF|Golaya Эмз',4864],['#7','VPF|SLASH👾',8241],['#8','VPF | FASTER',10518],['#9','VPF | ZêRøX',6851],['#10','『ʀᴇ𝚚ᴜɴᴅ』',6575]],tournament:['Monte Cristo','TEAM Falcons','$win$']}
+    clubPushers:[['#1','VPF|Samurai',25729],['#2','VPF| شكوليا',16032],['#3','VPF|NiceColt⛩️',6875],['#4','VPF|alinxxex',3035],['#5','VPF | MikaS 夜',11295],['#6','VPF|Golaya Эмз',4864],['#7','VPF|SLASH👾',8241],['#8','VPF | FASTER',10518],['#9','VPF | ZêRøX',6851],['#10','『ʀᴇ𝚚ᴜɴᴅ』',6575]],tournament:['Monte Cristo','TEAM Falcons','$win$']},
+  8:{name:'сентябрь',where:'сентябре',start:'01.09.2026 · 00:00:00',updated:'01.10.2026 · 00:00:33',plus:212348,total:7971976,
+    topClubs:[['VooPooFamily #2',65677],['VooPooFamily #1',32065],['VooPooFamily #6',32019]],antiClub:['VooPooFamily #7',3339],
+    members:[['VooPooFamily #6',21],['VooPooFamily #2',19],['VooPooFamily #5',14],['VooPooFamily #9',14],['VooPooFamily #1',13],['VooPooFamily #8',8],['VooPooFamily#10',8],['VooPooFamily #3',7],['VooPooFamily #4',7],['VooPooFamily #7',6]],
+    effective:[['VooPooFamily #2','65 677 / 3 457 ⚡'],['VooPooFamily #1','32 065 / 2 467 ⚡'],['VooPooFamily #3','15 407 / 2 201 ⚡'],['VooPooFamily #9','24 127 / 1 723 ⚡'],['VooPooFamily #6','32 019 / 1 525 ⚡'],['VooPooFamily #5','18 112 / 1 294 ⚡'],['VooPooFamily#10','8 424 / 1 053 ⚡'],['VooPooFamily #4','6 814 / 973 ⚡'],['VooPooFamily #8','6 364 / 796 ⚡'],['VooPooFamily #7','3 339 / 556 ⚡']],
+    pushers:[['VPF | zlayakaya',10305],['VPF | FASTER',9566],['VPF |😵IVA4N🥵',8908]],antiPusher:['VPF|teraktovnet',13],
+    x3:[['VPF | zlayakaya',1079],['VPF|Peetrix',1033],['VPF|monolit?',693]],anti3:['VPF|teraktovnet',1],
+    solo:[['VPF| شكوليا',270],['VPF|NiceColt⛩️',264],['VPF | Sava',254]],shd:[['VPF | Sava',324],['VPF|NiceColt⛩️',295],['VPF| شكوليا',272]],
+    wins:[['VPF|Peetrix',1154],['VPF | zlayakaya',1127],['VPF | FASTER',836]],antiWins:['VPF|teraktovnet',2],
+    brawlers:[['VPF|Kurumi⛩️','BOLT',3000],['VPF|Maori','KIT',3000],['VPF|Sanik9517','WENDY',2884]],antiBrawler:['VPF|LinSu','SPIKE',1011],
+    top10:[['VPF | zlayakaya',10305],['VPF | FASTER',9566],['VPF |😵IVA4N🥵',8908],['VPF|Iwkysam',8865],['VPF | Sava',8512],['VPF|Peetrix',8007],['VPF| شكوليا',7686],['VPF | Apathetic',7483],['VPF|LINE💕',6744],['VPF|NiceColt⛩️',6478]],
+    clubPushers:[['#1','VPF|NiceColt⛩️',6478],['#2','VPF |😵IVA4N🥵',8908],['#3','VPF | FASTER',9566],['#4','VPF|LinSu',3607],['#5','VPF|Dark Souls夜',5604],['#6','VPF | zlayakaya',10305],['#7','VPF|GeRuS✨',1481],['#8','VPF|ごめんね少年🕊️🥀',1865],['#9','VPF|LINE💕',6744],['#10','VPF|58',3871]],tournament:[]}
 };
 
 function renderHistorical(data){
