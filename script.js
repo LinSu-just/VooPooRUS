@@ -4,7 +4,7 @@ const JSONP_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tq
 const UPDATE_TIME_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&range=BF3:BF3`;
 const monthNames = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
 const monthWhere = ['январе','феврале','марте','апреле','мае','июне','июле','августе','сентябре','октябре','ноябре','декабре'];
-const CURRENT_MONTH_INDEX = 9;
+const CURRENT_MONTH_INDEX = 10;
 
 function parseCSV(text){
   const rows=[]; let row=[],cell='',quoted=false;
@@ -152,7 +152,18 @@ const historicalMonths={
     wins:[['VPF|Peetrix',1154],['VPF | zlayakaya',1127],['VPF | FASTER',836]],antiWins:['VPF|teraktovnet',2],
     brawlers:[['VPF|Kurumi⛩️','BOLT',3000],['VPF|Maori','KIT',3000],['VPF|Sanik9517','WENDY',2884]],antiBrawler:['VPF|LinSu','SPIKE',1011],
     top10:[['VPF | zlayakaya',10305],['VPF | FASTER',9566],['VPF |😵IVA4N🥵',8908],['VPF|Iwkysam',8865],['VPF | Sava',8512],['VPF|Peetrix',8007],['VPF| شكوليا',7686],['VPF | Apathetic',7483],['VPF|LINE💕',6744],['VPF|NiceColt⛩️',6478]],
-    clubPushers:[['#1','VPF|NiceColt⛩️',6478],['#2','VPF |😵IVA4N🥵',8908],['#3','VPF | FASTER',9566],['#4','VPF|LinSu',3607],['#5','VPF|Dark Souls夜',5604],['#6','VPF | zlayakaya',10305],['#7','VPF|GeRuS✨',1481],['#8','VPF|ごめんね少年🕊️🥀',1865],['#9','VPF|LINE💕',6744],['#10','VPF|58',3871]],tournament:[]}
+    clubPushers:[['#1','VPF|NiceColt⛩️',6478],['#2','VPF |😵IVA4N🥵',8908],['#3','VPF | FASTER',9566],['#4','VPF|LinSu',3607],['#5','VPF|Dark Souls夜',5604],['#6','VPF | zlayakaya',10305],['#7','VPF|GeRuS✨',1481],['#8','VPF|ごめんね少年🕊️🥀',1865],['#9','VPF|LINE💕',6744],['#10','VPF|58',3871]],tournament:[]},
+  9:{name:'октябрь',where:'октябре',start:'01.10.2026 · 00:00:33',updated:'01.11.2026 · 00:00:24',plus:244950,total:8233766,
+    topClubs:[['VooPooFamily #2',43232],['VooPooFamily #9',42810],['VooPooFamily #5',37579]],antiClub:['VooPooFamily #7',3415],
+    members:[['VooPooFamily #2',22],['VooPooFamily #6',17],['VooPooFamily #5',14],['VooPooFamily #1',13],['VooPooFamily #9',13],['VooPooFamily #3',11],['VooPooFamily #8',9],['VooPooFamily #4',7],['VooPooFamily #7',4],['VooPooFamily#10',4]],
+    effective:[['VooPooFamily #3','37 011 / 3 365 ⚡'],['VooPooFamily #9','42 810 / 3 293 ⚡'],['VooPooFamily #5','37 579 / 2 684 ⚡'],['VooPooFamily #8','23 911 / 2 657 ⚡'],['VooPooFamily #2','43 232 / 1 965 ⚡'],['VooPooFamily #1','23 237 / 1 787 ⚡'],['VooPooFamily#10','5 061 / 1 265 ⚡'],['VooPooFamily #6','20 596 / 1 212 ⚡'],['VooPooFamily #4','8 098 / 1 157 ⚡'],['VooPooFamily #7','3 415 / 854 ⚡']],
+    pushers:[['VPF | ZêRøX',12971],['VPF | FASTER',10083],['VPF | Chillboy✨',9841]],antiPusher:['VPF|zenoks',7],
+    x3:[['VPF | ZêRøX',1086],['VPF|ごめんね少年🕊️🥀',1006],['VPF|Hila',957]],anti3:['VPF | ZERO',1],
+    solo:[['VPF | FASTER',212],['VPF | LONELY',200],['VPF|Maori',199]],shd:[['VPF | ZêRøX',251],['VPF | LONELY',218],['VPF | Chillboy✨',216]],
+    wins:[['VPF | ZêRøX',1337],['VPF|ごめんね少年🕊️🥀',1063],['VPF|Hila',1000]],antiWins:['VPF | ZERO',1],
+    brawlers:[['VPF|Maori','ALLI',3343],['VPF | ZêRøX','NORI',3011],['VPF | MikaS 夜','JUJU',3003]],antiBrawler:['VPF|LinSu','SPIKE',1011],
+    top10:[['VPF | ZêRøX',12971],['VPF | FASTER',10083],['VPF | Chillboy✨',9841],['VPF|sivatking?',9158],['VPF|ごめんね少年🕊️🥀',7855],['VPF|🖤Hyunlix🖤',6986],['VPF|Hert1x',6940],['VPF|monolit?',6229],['VPF | LONELY',5910],['VPF| yosya',5661]],
+    clubPushers:[['#1','VPF|VooPooRUS',4090],['#2','VPF | Sava',5507],['#3','VPF | FASTER',10083],['#4','VPF | Dark',3545],['#5','VPF|🖤Hyunlix🖤',6986],['#6','VPF|monolit?',6229],['#7','VPF|Lim0n4i3',2541],['#8','VPF|ごめんね少年🕊️🥀',7855],['#9','VPF | ZêRøX',12971],['#10','VPF|Hisa !!',1875]],tournament:[]}
 };
 
 function renderHistorical(data){
